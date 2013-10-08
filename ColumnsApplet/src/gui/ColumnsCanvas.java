@@ -25,7 +25,7 @@ public class ColumnsCanvas extends Canvas {
 	//Colors
 	public static final Color BACKGROUND_COLOR = Color.BLACK;
 	private static final Color STATUS_TEXT_COLOR = Color.WHITE;
-	private static final Color GAMEOVER_TEXT_COLOR = Color.RED; 
+	private static final Color GAMEOVER_TEXT_COLOR = Color.RED;
 	
 	//Textures
 	private static final String BACKGROUND_IMAGE = "steel_texture.jpg";
