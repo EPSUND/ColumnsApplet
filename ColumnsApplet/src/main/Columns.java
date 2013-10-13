@@ -142,10 +142,7 @@ public class Columns extends JApplet implements Runnable {
 	{
 		gameEngine = new GameEngine(columnsCanvas);
 		soundPlayer = makeColumnsSoundPlayer();
-		highScoreSystem = new ColumnsHighScoreSystem(makeUnsortedListFeedURL(),
-													 makeSortedListFeedURL(),
-													 new HighScoreListDialog(new ColumnsHighScoreTableModel())
-													 );
+		highScoreSystem = new ColumnsHighScoreSystem(new HighScoreListDialog(new ColumnsHighScoreTableModel()));
 	}
 	
 	private void createGUI()
@@ -328,43 +325,5 @@ public class Columns extends JApplet implements Runnable {
 		sp.loadClip("sounds/cleared_brick_5.wav", "cleared_brick_5");
 		
 		return sp;
-	}
-	
-	private URL makeUnsortedListFeedURL()
-	{
-		URL url;
-		
-		try
-		{
-			url = new URL("https://spreadsheets.google.com/feeds/list/tWyj1F413cTMy3of06WmGzw/od6/private/full");
-		}
-		catch(MalformedURLException e)
-		{
-			System.err.println("Columns: The provided URL is malformed");
-			e.printStackTrace();
-			//Make the url null just in case
-			url = null;
-		}
-		
-		return url;
-	}
-	
-	private URL makeSortedListFeedURL()
-	{
-		URL url;
-		
-		try
-		{
-			url = new URL("https://spreadsheets.google.com/feeds/list/tWyj1F413cTMy3of06WmGzw/od7/public/values");
-		}
-		catch(MalformedURLException e)
-		{
-			System.err.println("Columns: The provided URL is malformed");
-			e.printStackTrace();
-			//Make the url null just in case
-			url = null;
-		}
-		
-		return url;
 	}
 }
