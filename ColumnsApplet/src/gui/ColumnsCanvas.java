@@ -157,20 +157,20 @@ public class ColumnsCanvas extends Canvas {
 		//Make sure the graphics context uses the status field font
 		graphicsContext.setFont(statusFieldFont);
 		//Draw the level
-		drawShadowedText(GameEngine.CELL_WIDTH - Columns.COLUMNS_SPACING, GameEngine.CELL_HEIGHT - 2, "Level", statusFieldFont, STATUS_TEXT_COLOR);
+		drawShadowedText(GameEngine.CELL_WIDTH - Columns.STATUS_FIELD_SPACING, GameEngine.CELL_HEIGHT - 2, "Level", statusFieldFont, STATUS_TEXT_COLOR);
 		drawShadowedText(GameEngine.CELL_WIDTH, GameEngine.CELL_HEIGHT + graphicsContext.getFontMetrics().getHeight() - 2, Integer.toString(level), statusFieldFont, STATUS_TEXT_COLOR);
 		//Draw the score
-		drawShadowedText(GameEngine.CELL_WIDTH - Columns.COLUMNS_SPACING, GameEngine.CELL_HEIGHT * 3 - 2, "Score", statusFieldFont, STATUS_TEXT_COLOR);
+		drawShadowedText(GameEngine.CELL_WIDTH - Columns.STATUS_FIELD_SPACING, GameEngine.CELL_HEIGHT * 3 - 2, "Score", statusFieldFont, STATUS_TEXT_COLOR);
 		drawShadowedText(GameEngine.CELL_WIDTH, GameEngine.CELL_HEIGHT * 3 + graphicsContext.getFontMetrics().getHeight() - 2, Integer.toString(score), statusFieldFont, STATUS_TEXT_COLOR);
 		//Draw the number of bricks
-		drawShadowedText(GameEngine.CELL_WIDTH - Columns.COLUMNS_SPACING, GameEngine.CELL_HEIGHT * 5 - 2, "Bricks", statusFieldFont, STATUS_TEXT_COLOR);
+		drawShadowedText(GameEngine.CELL_WIDTH - Columns.STATUS_FIELD_SPACING, GameEngine.CELL_HEIGHT * 5 - 2, "Bricks", statusFieldFont, STATUS_TEXT_COLOR);
 		drawShadowedText(GameEngine.CELL_WIDTH, GameEngine.CELL_HEIGHT * 5 + graphicsContext.getFontMetrics().getHeight() - 2, Integer.toString(numBricks), statusFieldFont, STATUS_TEXT_COLOR);
 		//Draw the box containing the next block
 		graphicsContext.setStroke(new BasicStroke(4));//Make the line thicker
 		graphicsContext.setColor(Color.BLACK);
-		graphicsContext.drawRect(GameEngine.NEXT_BLOCK_X - Columns.COLUMNS_SPACING, GameEngine.NEXT_BLOCK_Y - GameEngine.CELL_HEIGHT, GameEngine.CELL_WIDTH + Columns.COLUMNS_SPACING * 2, GameEngine.CELL_HEIGHT * 5);
-		graphicsContext.drawImage(imageCache.getImage(Helpers.getResourceURIString(this, "images/" + NEXT_BLOCK_BOX_IMAGE)), GameEngine.NEXT_BLOCK_X - Columns.COLUMNS_SPACING, GameEngine.NEXT_BLOCK_Y - GameEngine.CELL_HEIGHT, GameEngine.CELL_WIDTH + Columns.COLUMNS_SPACING * 2, GameEngine.CELL_HEIGHT * 5, this);
-		drawShadowedText(GameEngine.CELL_WIDTH - Columns.COLUMNS_SPACING, GameEngine.NEXT_BLOCK_Y - Columns.COLUMNS_SPACING, "Next", statusFieldFont, STATUS_TEXT_COLOR);
+		graphicsContext.drawRect(GameEngine.NEXT_BLOCK_X - Columns.STATUS_FIELD_SPACING, GameEngine.NEXT_BLOCK_Y - GameEngine.CELL_HEIGHT, GameEngine.CELL_WIDTH + Columns.STATUS_FIELD_SPACING * 2, GameEngine.CELL_HEIGHT * 5);
+		graphicsContext.drawImage(imageCache.getImage(Helpers.getResourceURIString(this, "images/" + NEXT_BLOCK_BOX_IMAGE)), GameEngine.NEXT_BLOCK_X - Columns.STATUS_FIELD_SPACING, GameEngine.NEXT_BLOCK_Y - GameEngine.CELL_HEIGHT, GameEngine.CELL_WIDTH + Columns.STATUS_FIELD_SPACING * 2, GameEngine.CELL_HEIGHT * 5, this);
+		drawShadowedText(GameEngine.CELL_WIDTH - Columns.STATUS_FIELD_SPACING, GameEngine.NEXT_BLOCK_Y - Columns.STATUS_FIELD_SPACING, "Next", statusFieldFont, STATUS_TEXT_COLOR);
 		//Draw the line separating the status field from the playing field
 		Stroke oldStroke = graphicsContext.getStroke();
 		graphicsContext.setStroke(new BasicStroke(2));//Make the line thicker

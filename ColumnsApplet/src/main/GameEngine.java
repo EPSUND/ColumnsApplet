@@ -13,7 +13,7 @@ public class GameEngine {
 	private static final int START_COLUMN = 5;
 	private static final int START_ROW = 0;
 	
-	public static final int NEXT_BLOCK_X = CELL_WIDTH - Columns.COLUMNS_SPACING / 2;
+	public static final int NEXT_BLOCK_X = CELL_WIDTH - Columns.STATUS_FIELD_SPACING / 2;
 	public static final int NEXT_BLOCK_Y = CELL_HEIGHT * 8;
 	
 	private static final int FALLING_BRICK_DELAY = 10;

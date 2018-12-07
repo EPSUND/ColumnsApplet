@@ -7,6 +7,8 @@ import hscore.ColumnsHighScoreSystem;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -23,7 +25,7 @@ import sound.SoundPlayer;
 import utils.Helpers;
 
 
-public class Columns extends JApplet implements Runnable {
+public class Columns extends JFrame {
 	
 	public static final int DEFAULT_WINDOW_WIDTH = 545;
 	public static final int DEFAULT_WINDOW_HEIGHT = 540;
@@ -31,7 +33,9 @@ public class Columns extends JApplet implements Runnable {
 	public static final int CANVAS_GRID_WIDTH = 320;//560
 	public static final int CANVAS_GRID_HEIGHT = 480;//560
 	
-	public static final int COLUMNS_SPACING = 15;
+	public static final int STATUS_FIELD_SPACING = 15;//Spacing for the status field
+	
+	private static final int WINDOW_SPACING = 52;//Spacing for the menubar and title
 	
 	//GUI items
 	
@@ -49,6 +53,7 @@ public class Columns extends JApplet implements Runnable {
 	public JMenuItem howToPlayItem;
 	public JMenuItem controlsItem;
 	public JMenuItem aboutItem;
+	public JMenuItem quitItem;
 	
 	public ColumnsCanvas columnsCanvas;
 	
@@ -58,25 +63,35 @@ public class Columns extends JApplet implements Runnable {
 	
 	public GameEngine gameEngine;
 	
-	private Thread gameThread;
+	public Columns()
+	{
+		super();
+		setResizable(false);
+		setVisible(true);
+		createGUI();
+	}
 	
-	public void destroy()
+	public void disposeGameResources()
 	{
 		//Dispose sound resources
 		soundPlayer.disposePlayer();
 	}
 	
-	public void stop()
-	{
-		//Gör något vettigt
+	public static void main(String[] args) {
+		Columns columns = new Columns();
+		
+        //Create game resources
+		if(columns.createGameResources())
+		{
+			columns.runGame();
+		}
+		else
+		{
+			System.err.println("Could not run game");
+		}         
 	}
 	
-	public void start()
-	{
-		//Gör något vettigt
-	}
-	
-	public void run()
+	public void runGame()
 	{
 		try
 		{
@@ -88,7 +103,7 @@ public class Columns extends JApplet implements Runnable {
 				if(!gameEngine.getRestart())//Only do this once
 				{
 					/* Set the applet size. Extend the height somewhat for the status field and the menu bar*/
-					setSize(gameEngine.getPlayingFieldWidth(), gameEngine.getPlayingFieldHeight() + menuBar.getHeight());
+					setSize(gameEngine.getPlayingFieldWidth(), gameEngine.getPlayingFieldHeight() + WINDOW_SPACING);
 				}
 				else//We have restarted and should set the restart flag to false
 				{
@@ -103,50 +118,33 @@ public class Columns extends JApplet implements Runnable {
 		}
 		catch(Exception e)
 		{
-			JOptionPane.showMessageDialog(null, Helpers.getStackTraceString(e), "Word on Word: An exception has occured", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, Helpers.getStackTraceString(e), "Columns: An exception has occured", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	
-	public void init()
-	{	
-		try 
+	private boolean createGameResources()
+	{
+		try
 		{
-			//Create the applet's GUI on the event-dispatching thread
-	        SwingUtilities.invokeAndWait(new Runnable() {
-	            public void run() {
-	                createGUI();
-	            }
-	        });
-	        
-	        //Create game resources
-	        createGameResources();
-	        //Start a new game
-	        newGame();
+			gameEngine = new GameEngine(columnsCanvas);
+			soundPlayer = makeColumnsSoundPlayer();
+			highScoreSystem = new ColumnsHighScoreSystem(new HighScoreListDialog(new ColumnsHighScoreTableModel()));
 		}
 		catch(Exception e)
 		{
-			System.err.println("Columns: The game could not initialised properly");
+			System.err.println("Columns: Could not create game resources");
 	        e.printStackTrace();
-	        return;
+	        return false;
 		}
-	}
-	
-	private void newGame() 
-	{
-		//Start the game thread
-	    gameThread = new Thread(this);
-	    gameThread.start();
-	}
-	
-	private void createGameResources()
-	{
-		gameEngine = new GameEngine(columnsCanvas);
-		soundPlayer = makeColumnsSoundPlayer();
-		highScoreSystem = new ColumnsHighScoreSystem(new HighScoreListDialog(new ColumnsHighScoreTableModel()));
+		
+		return true;
 	}
 	
 	private void createGUI()
 	{
+		/*Set the title of the game*/
+		setTitle("Columns");
+		
 		/*Get the frame's panel*/
 		columnsPanel = (JPanel)getContentPane();
 
@@ -164,11 +162,13 @@ public class Columns extends JApplet implements Runnable {
 		pauseItem = new JMenuItem("Pause");
 		resumeItem = new JMenuItem("Resume");
 		highScoreItem = new JMenuItem("High score");
+		quitItem = new JMenuItem("Quit");
 		
 		/*Add the game menu items to the menu*/
 		gameMenu.add(restartItem);
 		gameMenu.add(pauseItem);
 		gameMenu.add(highScoreItem);
+		gameMenu.add(quitItem);
 		
 		/*Create the options menu*/
 		optionsMenu = new JMenu("Options");
@@ -309,9 +309,41 @@ public class Columns extends JApplet implements Runnable {
 				gameEngine.setIsPaused(true);//Pause the game while viewing help
 				JOptionPane.showMessageDialog(null,
 						"DEVELOPED BY:\n" +
-						"Erik Sundholm 2013",
+						"Erik Sundholm 2013-2018",
 						"About", JOptionPane.INFORMATION_MESSAGE, null);
 				gameEngine.setIsPaused(false);
+			}
+		});
+		
+		quitItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				/* Show a confirm dialog. */
+				int answer = JOptionPane.showConfirmDialog(null,
+						"Are you sure you want to quit?",
+						"Quit Confirmation", JOptionPane.YES_NO_OPTION);
+
+				/* Check if the answer was yes. */
+				if(answer == JOptionPane.YES_OPTION) {
+					disposeGameResources();
+					System.exit(0);     // Exit application.
+				}
+			}
+		});
+		
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				/* Show a confirm dialog. */
+				int answer = JOptionPane.showConfirmDialog(null,
+						"Are you sure you want to quit?",
+						"Quit Confirmation", JOptionPane.YES_NO_OPTION);
+
+				/* Check if the answer was yes. */
+				if(answer == JOptionPane.YES_OPTION) {
+					disposeGameResources();
+					System.exit(0);     // Exit application.
+				}
 			}
 		});
 	}
